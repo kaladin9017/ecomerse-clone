@@ -4,7 +4,7 @@ const path = require('path');
 let app = express();
 
 app.use(bodyparser.urlencoded({ extended: false }));
-app.use(bodyparser.json())
+app.use(bodyparser.json());
 app.use(express.static('public'))
 
 
