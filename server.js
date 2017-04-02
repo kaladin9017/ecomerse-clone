@@ -6,6 +6,9 @@ let app = express();
 const bodyparser = require('body-parser');
 const path = require('path');
 
+const User = require('./models/user');
+
+
 mongoose.connect('mongodb://root:Queenstech@ds147920.mlab.com:47920/ecommerse', function(err) {
   if (err) {
     console.log(err);
@@ -19,12 +22,23 @@ mongoose.connect('mongodb://root:Queenstech@ds147920.mlab.com:47920/ecommerse', 
 // Middleare
 app.use(morgan('dev'));
 app.use(express.static('public'));
-// app.use(bodyparser.urlencoded({ extended: false }));
-// app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: true }));
+app.use(bodyparser.json());
 
 
-app.get('/catname', function(req,res) {
-  res.json('batman');
+app.post('/create-user', function(req,res, next) {
+  let user = new User();
+  user.profile.name = req.body.name;
+  user.password = req.body.password;
+  user.email = req.body.email;
+
+  user.save(function(err) {
+    if(err) {
+      return next(err);
+    };
+    res.json('created new user');
+  });
+
 });
 
 app.get('/*', function(req, res) {
